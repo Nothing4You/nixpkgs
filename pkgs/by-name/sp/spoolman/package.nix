@@ -22,7 +22,7 @@ in
 python.pkgs.buildPythonPackage rec {
 
   pname = "spoolman";
-  inherit (common) version src;
+  inherit (common) version src patches;
 
   pyproject = true;
 
@@ -87,6 +87,8 @@ python.pkgs.buildPythonPackage rec {
     ''
       mkdir -p $out/runpath/client/dist $out/bin
       cp -r $src/* $out/runpath
+      # force use of spoolman from site-packages, where patches will have been applied
+      rm -rf $out/runpath/spoolman # Remove unpatched source to prefer site-packages
       cp -r ${frontend}/* $out/runpath/client/dist
 
       makeWrapper ${start_script} $out/bin/spoolman \
